@@ -29,19 +29,32 @@ const Shows = () => {
     fetchPosts(); // Call the fetch function when the component mounts
   }, []); // Runs once when the component mounts
 
-  const ShowElements = shows.map(show => (
+  // Sort the shows alphabetically by title before mapping
+  const sortedShows = shows.sort((a, b) => {
+    if (a.title < b.title) return -1; // If a.title comes before b.title, return -1
+    if (a.title > b.title) return 1;  // If a.title comes after b.title, return 1
+    return 0; // If titles are equal, return 0
+  });
+
+  const ShowElements = sortedShows.map(show => (
     <div key={show.id} className="van-tile">
         <img src={show.image} />
         <div className="van-info">
             <h3>{show.title}</h3>
-            <p>${show.description}<span>/day</span></p>
+            <p>{show.description}<span>/day</span></p>
         </div>
     </div>
 ))
 
   return (
     <div>
-        <h2>Explore our shows</h2>
+
+        <div className="van-list-container">
+            <h1>Explore our shows</h1>
+            <div className="van-list">
+                {ShowElements}
+            </div>
+        </div>
        
     </div>
   );
