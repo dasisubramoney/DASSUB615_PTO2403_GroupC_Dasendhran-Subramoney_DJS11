@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"; // Import React hooks
 const Shows = () => {
   const [status, setStatus] = useState(); // State to store API status message
   const [shows, setShows] = useState([]); // Store posts in state
+  const [isLoading, setIsLoading] = useState(true); // State to track loading status
 
   // useEffect hook to fetch data when the component mounts
   useEffect(() => {
@@ -23,6 +24,8 @@ const Shows = () => {
         }
       } catch (error) {
         setStatus("API request failed!"); // Handle network errors
+      } finally {
+        setIsLoading(false); // Set loading to false when the fetch is complete (success or error)
       }
     };
 
@@ -36,12 +39,23 @@ const Shows = () => {
     return 0; // If titles are equal, return 0
   });
 
+   // Helper function to truncate the description to a certain number of words
+   const truncateDescription = (text, wordLimit) => {
+    const words = text.split(" "); // Split the text into an array of words
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(" ") + "...READ MORE"; // Join the first 'wordLimit' words and add ellipsis
+    }
+    return text; // Return the original text if it's within the limit
+  };
+
   const ShowElements = sortedShows.map(show => (
     <div key={show.id} className="van-tile">
         <img src={show.image} />
         <div className="van-info">
             <h3>{show.title}</h3>
-            <p>{show.description}<span>/day</span></p>
+            <p>{truncateDescription(show.description, 10)}</p>
+            <p>Seasons: {show.seasons}</p>
+            <p>Seasons: {show.seasons}</p>
         </div>
     </div>
 ))
@@ -51,9 +65,13 @@ const Shows = () => {
 
         <div className="van-list-container">
             <h1>Explore our shows</h1>
-            <div className="van-list">
+
+            {isLoading ? ( // Display loading message if data is still being fetched
+              <p>Loading shows...</p>
+            ) : (
+              <div className="van-list">
                 {ShowElements}
-            </div>
+              </div> )}
         </div>
        
     </div>

@@ -74,10 +74,38 @@ header a:hover {
 
 .van-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr); /* Four columns by default */
   justify-items: center;
   gap: 34px;
   margin-top: 57px;
+}
+
+@media (max-width: 1200px) {
+  .van-list {
+    grid-template-columns: repeat(3, 1fr); /* Three columns for medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .van-list {
+    grid-template-columns: repeat(2, 1fr); /* Two columns for small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .van-list {
+    grid-template-columns: 1fr; /* One column for mobile screens */
+  }
+}
+
+
+.van-tile {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  width: 300px; /* Smaller width */
 }
 
 .van-tile a {
@@ -87,6 +115,7 @@ header a:hover {
     margin: 10px; /* Add some margin for spacing */
     text-align: center; /* Center the content */    
 }
+
 
 .van-tile img {
   max-width: 50%; /* Ensure the image fits within the tile */
