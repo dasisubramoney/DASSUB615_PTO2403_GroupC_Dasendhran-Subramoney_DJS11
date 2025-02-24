@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from "react"; // Import React hooks
+import { useParams } from 'react-router-dom';
+import { Link } from "react-router-dom"
 
 const Shows = () => {
   const [status, setStatus] = useState(); // State to store API status message
@@ -22,18 +24,18 @@ const Shows = () => {
         } else {
           setStatus("API is down!"); // Set error status if API fails
         }
-      } catch (error) {
-        setStatus("API request failed!"); // Handle network errors
-      } finally {
-        setIsLoading(false); // Set loading to false when the fetch is complete (success or error)
-      }
+        } catch (error) {
+          setStatus("API request failed!"); // Handle network errors
+        } finally {
+          setIsLoading(false); // Set loading to false when the fetch is complete (success or error)
+        }
     };
 
     fetchPosts(); // Call the fetch function when the component mounts
   }, []); // Runs once when the component mounts
 
   // Sort the shows alphabetically by title before mapping
-  const sortedShows = shows.sort((a, b) => {
+  const sortedShows = shows.sort((a,b) => {
     if (a.title < b.title) return -1; // If a.title comes before b.title, return -1
     if (a.title > b.title) return 1;  // If a.title comes after b.title, return 1
     return 0; // If titles are equal, return 0
@@ -48,15 +50,30 @@ const Shows = () => {
     return text; // Return the original text if it's within the limit
   };
 
+   // Function to format the last updated date
+   const formatDate = (dateString) => {
+    const date = new Date(dateString); // Parse the ISO 8601 date string
+    return date.toLocaleDateString("en-US", { // Format the date
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   const ShowElements = sortedShows.map(show => (
     <div key={show.id} className="van-tile">
+      <Link to={`/shows/${show.id}`}> {/* Link to the show detail page */}
         <img src={show.image} />
         <div className="van-info">
             <h3>{show.title}</h3>
             <p>{truncateDescription(show.description, 10)}</p>
             <p>Seasons: {show.seasons}</p>
-            <p>Seasons: {show.seasons}</p>
+            {/* Display the last updated date */}
+            <p style={{ fontSize: "14px", color: "black", marginTop: "8px" }}>
+              Last updated: {formatDate(show.updated)}
+            </p>
         </div>
+      </Link>
     </div>
 ))
 
