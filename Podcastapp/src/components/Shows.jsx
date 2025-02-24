@@ -62,7 +62,7 @@ const Shows = () => {
 
   const ShowElements = sortedShows.map(show => (
     <div key={show.id} className="van-tile">
-      <Link to={`/shows/${show.id}`}> {/* Link to the show detail page */}
+      <Link to={`/ShowDetail/${show.id}`}> {/* Link to the show detail page */}
         <img src={show.image} />
         <div className="van-info">
             <h3>{show.title}</h3>

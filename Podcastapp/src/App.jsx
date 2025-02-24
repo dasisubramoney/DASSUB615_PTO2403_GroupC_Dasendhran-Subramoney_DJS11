@@ -22,11 +22,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shows" element={<Shows />} />
-        <Route path="/shows/:id" element={<ShowDetail />} />
+        <Route path="/ShowDetail/:id" element={<ShowDetail />} />
         <Route path="/genres" element={<Genres />} />
         <Route path="/favorites" element={<Favorites />} />
       </Routes>
-      
+
     </BrowserRouter>
 
   )
