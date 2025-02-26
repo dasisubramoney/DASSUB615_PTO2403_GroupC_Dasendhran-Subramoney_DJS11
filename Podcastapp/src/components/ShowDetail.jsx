@@ -10,6 +10,28 @@ export default function ShowDetail() {
     const [selectedSeason, setSelectedSeason] = React.useState(null); // Track selected season
     const [selectedEpisode, setSelectedEpisode] = React.useState(null); // Track selected episode
 
+    const [isFavorite, setIsFavorite] = React.useState(false); // Track if the episode is in favorites
+
+    // Fetch favorites from localStorage
+    const getFavorites = () => {
+        const favorites = localStorage.getItem("favorites");
+        return favorites ? JSON.parse(favorites) : [];
+    };
+
+    // Check if the current episode is in favorites
+    React.useEffect(() => {
+        if (selectedEpisode) {
+            const favorites = getFavorites();
+            const isInFavorites = favorites.some(
+                (fav) =>
+                    fav.id === params.id &&
+                    fav.season === selectedSeason.season &&
+                    fav.episode === selectedEpisode.episode
+            );
+            setIsFavorite(isInFavorites);
+        }
+    }, [selectedEpisode, params.id, selectedSeason]);
+
     React.useEffect(() => {
         // Async function to fetch posts from the API
         const fetchPosts = async () => {
@@ -59,6 +81,41 @@ export default function ShowDetail() {
     const handleEpisodeChange = (event) => {
         const episodeIndex = event.target.value;
         setSelectedEpisode(selectedSeason.episodes[episodeIndex]);
+    };
+
+    // Add to favorites
+    const addToFavorites = () => {
+        if (!selectedEpisode || !selectedSeason) return;
+
+        const favoriteItem = {
+            id: params.id,
+            title: showitem.title,
+            season: selectedSeason.season,
+            episode: selectedEpisode.episode,
+            episodeTitle: selectedEpisode.title,
+        };
+
+        const favorites = getFavorites();
+        favorites.push(favoriteItem);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        setIsFavorite(true);
+    };
+
+    // Remove from favorites
+    const removeFromFavorites = () => {
+        if (!selectedEpisode || !selectedSeason) return;
+
+        const favorites = getFavorites();
+        const updatedFavorites = favorites.filter(
+            (fav) =>
+                !(
+                    fav.id === params.id &&
+                    fav.season === selectedSeason.season &&
+                    fav.episode === selectedEpisode.episode
+                )
+        );
+        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+        setIsFavorite(false);
     };
 
     if (isLoading) {
@@ -126,6 +183,14 @@ export default function ShowDetail() {
                         Your browser does not support the audio element.
                     </audio>
                     <p>{selectedEpisode.description}</p>
+
+                    {/* Add/Remove Favorites Button */}
+                    {isFavorite ? (
+                        <button onClick={removeFromFavorites}>Remove from Favorites</button>
+                    ) : (
+                        <button onClick={addToFavorites}>Add to Favorites</button>
+                    )}
+                    
                 </div>
             )}
 
