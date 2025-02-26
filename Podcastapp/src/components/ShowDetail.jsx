@@ -12,10 +12,26 @@ export default function ShowDetail() {
 
     const [isFavorite, setIsFavorite] = React.useState(false); // Track if the episode is in favorites
 
+    const [playbackProgress, setPlaybackProgress] = React.useState(0); // Track playback progress
+
+
     // Fetch favorites from localStorage
     const getFavorites = () => {
         const favorites = localStorage.getItem("favorites");
         return favorites ? JSON.parse(favorites) : [];
+    };
+
+    // Retrieve completed episodes from localStorage
+    const getCompletedEpisodes = () => {
+        const completed = localStorage.getItem("completedEpisodes");
+        return completed ? JSON.parse(completed) : [];
+    };
+
+    // Check if an episode is completed
+    const isEpisodeCompleted = (seasonNumber, episodeNumber) => {
+        const episodeKey = `${params.id}-${seasonNumber}-${episodeNumber}`;
+        const completedEpisodes = getCompletedEpisodes();
+        return completedEpisodes.includes(episodeKey);
     };
 
     // Check if the current episode is in favorites
@@ -119,6 +135,28 @@ export default function ShowDetail() {
         setIsFavorite(false);
     };
 
+    // Handle audio playback progress
+    const handleTimeUpdate = (event) => {
+        const audio = event.target;
+        const progress = (audio.currentTime / audio.duration) * 100;
+        setPlaybackProgress(progress);
+
+        // Save playback progress to localStorage
+        const progressKey = `${params.id}-${selectedSeason.season}-${selectedEpisode.episode}-progress`;
+        localStorage.setItem(progressKey, progress);
+    };
+
+    // Handle audio playback end
+    const handleAudioEnd = () => {
+        // Mark episode as completed
+        const completedEpisodes = getCompletedEpisodes();
+        const episodeKey = `${params.id}-${selectedSeason.season}-${selectedEpisode.episode}`;
+        if (!completedEpisodes.includes(episodeKey)) {
+            completedEpisodes.push(episodeKey);
+            localStorage.setItem("completedEpisodes", JSON.stringify(completedEpisodes));
+        }
+    };
+
     if (isLoading) {
         return <div>Loading...</div>; // Show loading state
     }
@@ -166,11 +204,15 @@ export default function ShowDetail() {
                     <label htmlFor="episode-select">Select an episode: </label>
                     <select id="episode-select" onChange={handleEpisodeChange}>
                         <option value="">-- Choose an episode --</option>
-                        {selectedSeason.episodes.map((episode, index) => (
-                            <option key={episode.episode} value={index}>
-                                {episode.title}
-                            </option>
-                        ))}
+                        {selectedSeason.episodes.map((episode, index) => {
+                            const isCompleted = isEpisodeCompleted(selectedSeason.season, episode.episode);
+
+                            return (
+                                <option key={episode.episode} value={index}>
+                                    {episode.title} {isCompleted && "✔️"}
+                                </option>
+                            );
+                        })}
                     </select>
                 </div>
             )}
@@ -179,11 +221,16 @@ export default function ShowDetail() {
             {selectedEpisode && (
                 <div>
                     <h4>Now Playing: {selectedEpisode.title}</h4>
-                    <audio controls>
-                        <source src={selectedEpisode.file} type="audio/mpeg" />
+                    <audio 
+                        controls
+                        onTimeUpdate={handleTimeUpdate}
+                        onEnded={handleAudioEnd}
+                        src={selectedEpisode.file}
+                    >
                         Your browser does not support the audio element.
                     </audio>
                     <p>{selectedEpisode.description}</p>
+                    <p>Playback Progress: {playbackProgress.toFixed(2)}%</p>
 
                     {/* Add/Remove Favorites Button */}
                     {isFavorite ? (
