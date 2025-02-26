@@ -25,7 +25,7 @@ function App() {
         <Route path="/shows" element={<Shows />} />
         <Route path="/ShowDetail/:id" element={<ShowDetail />} />
         <Route path="/genres" element={<Genres />} />
-        <Route path="/genres/:genreid" element={<GenreDetail />} />
+        <Route path="/genres/:genresId" element={<GenreDetail />} />
         <Route path="/favorites" element={<Favorites />} />
       </Routes>
 

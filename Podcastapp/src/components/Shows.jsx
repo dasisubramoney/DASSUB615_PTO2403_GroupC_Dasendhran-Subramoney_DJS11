@@ -75,7 +75,7 @@ const Shows = () => {
         </div>
       </Link>
     </div>
-))
+  ))
 
   return (
     <div>

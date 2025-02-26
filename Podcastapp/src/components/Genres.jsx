@@ -19,11 +19,10 @@ const Genres = () => {
       ];
   
       // Handle genre button click
-      const handleGenreClick = (genreId) => {
-          navigate(`/genres/${genreId}`); // Navigate to the genre's page
+      const handleGenreClick = (genresId) => {
+        console.log('Clicked genre ID:', genresId); // Debugging: Log the genre ID
+          navigate(`/genres/${genresId}`); // Navigate to the genre's page
       };
-
-
 
   return (
           <div>
