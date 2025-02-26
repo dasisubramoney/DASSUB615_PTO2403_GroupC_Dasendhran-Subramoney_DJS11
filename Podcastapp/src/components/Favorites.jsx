@@ -28,7 +28,21 @@ const Favorites = () => {
                 )
         );
         localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-        window.location.reload(); // Refresh the page to reflect changes
+        window.location.reload(); // Refresh the page to reflect changes  
+    };
+
+    // Format the timestamp
+    const formatTimestamp = (timestamp) => {
+      if (!timestamp) return "Date not available";
+      const date = new Date(timestamp);
+      return date.toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+      });
     };
 
 
@@ -51,6 +65,8 @@ const Favorites = () => {
                           <p>Season: {fav.season}</p>
                           <p>Episode: {fav.episode}</p>
                           <p>Episode Title: {fav.episodeTitle}</p>
+                          <p>Added on: {formatTimestamp(fav.addedAt)}</p> {/* Display timestamp */}
+
                           <button
                               onClick={() =>
                                   removeFromFavorites(fav.id, fav.season, fav.episode)

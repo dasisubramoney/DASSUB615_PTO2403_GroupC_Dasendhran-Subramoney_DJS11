@@ -93,6 +93,7 @@ export default function ShowDetail() {
             season: selectedSeason.season,
             episode: selectedEpisode.episode,
             episodeTitle: selectedEpisode.title,
+            addedAt: new Date().toISOString(), // Add timestamp
         };
 
         const favorites = getFavorites();
@@ -190,7 +191,7 @@ export default function ShowDetail() {
                     ) : (
                         <button onClick={addToFavorites}>Add to Favorites</button>
                     )}
-                    
+
                 </div>
             )}
 
