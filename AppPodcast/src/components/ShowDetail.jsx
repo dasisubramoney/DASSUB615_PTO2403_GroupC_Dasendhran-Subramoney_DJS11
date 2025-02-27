@@ -282,13 +282,13 @@ export default function ShowDetail() {
                         <button onClick={addToFavorites}>Add to Favorites</button>
                     )}
 
+                    {/* Reset Progress Button */}
+                    <button onClick={resetCompletedEpisodes} style={{ marginTop: "20px" }}>
+                        Reset Completed Episodes
+                    </button>
+
                 </div>
             )}
-
-            {/* Reset Progress Button */}
-            <button onClick={resetCompletedEpisodes} style={{ marginTop: "20px" }}>
-                Reset Completed Episodes
-            </button>
 
         </div>
     )
