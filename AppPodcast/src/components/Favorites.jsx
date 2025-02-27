@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import { sortByTitleAZ, sortByTitleZA, sortByMostRecentUpdate, sortByLeastRecentUpdate } from "./Functions";
 
 const Favorites = () => {
   const navigate = useNavigate();
@@ -10,7 +11,30 @@ const Favorites = () => {
         return favorites ? JSON.parse(favorites) : [];
     };
 
-    const favorites = getFavorites();
+    const [favorites, setFavorites] = useState(getFavorites()); // Reactive favorites state
+    const [sortedFavorites, setSortedFavorites] = useState(favorites);
+
+    // Update sortedFavorites when favorites changes
+    useEffect(() => {
+            setSortedFavorites([...favorites]);
+    }, [favorites]);
+
+    // Sorting handlers
+    const handleSortByTitleAZ = () => {
+        setSortedFavorites(sortByTitleAZ([...favorites]));
+    };
+
+    const handleSortByTitleZA = () => {
+        setSortedFavorites(sortByTitleZA([...favorites]));
+    };
+
+    const handleSortByMostRecentUpdate = () => {
+        setSortedFavorites(sortByMostRecentUpdate([...favorites]));
+    };
+
+    const handleSortByLeastRecentUpdate = () => {
+        setSortedFavorites(sortByLeastRecentUpdate([...favorites]));
+    };
 
     // Handle back button click
     const handleBack = () => {
@@ -19,16 +43,9 @@ const Favorites = () => {
 
     // Handle remove from favorites
     const removeFromFavorites = (id, season, episode) => {
-        const updatedFavorites = favorites.filter(
-            (fav) =>
-                !(
-                    fav.id === id &&
-                    fav.season === season &&
-                    fav.episode === episode
-                )
-        );
+        const updatedFavorites = favorites.filter((fav) =>!(fav.id === id &&fav.season === season &&fav.episode === episode) );
         localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-        window.location.reload(); // Refresh the page to reflect changes  
+        setFavorites(updatedFavorites); // Update favorites state to trigger re-render
     };
 
     // Format the timestamp
@@ -55,11 +72,19 @@ const Favorites = () => {
 
           <h1>Your Favorites</h1>
 
+          {/* Sorting Buttons */}
+          <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
+                <button onClick={handleSortByTitleAZ}>Sort by Title (A-Z)</button>
+                <button onClick={handleSortByTitleZA}>Sort by Title (Z-A)</button>
+                <button onClick={handleSortByMostRecentUpdate}>Most Recently Updated</button>
+                <button onClick={handleSortByLeastRecentUpdate}>Least Recently Updated</button>
+            </div>
+
           {favorites.length === 0 ? (
               <p>No favorites added yet.</p>
           ) : (
               <div>
-                  {favorites.map((fav, index) => (
+                  {sortedFavorites.map((fav, index) => (
                       <div key={index} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
                           <h3>{fav.title}</h3>
                           <p>Season: {fav.season}</p>
