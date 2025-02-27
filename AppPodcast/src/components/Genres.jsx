@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
+import Shows from './Shows';
 
 const Genres = () => {
   
@@ -38,6 +39,7 @@ const Genres = () => {
                     </button>
                 ))}
             </div>
+            <Shows />
         </div>
   );
 };
