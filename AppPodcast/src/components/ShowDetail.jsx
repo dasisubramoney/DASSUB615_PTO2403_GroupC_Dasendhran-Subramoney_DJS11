@@ -9,10 +9,9 @@ export default function ShowDetail() {
     const [isLoading, setIsLoading] = React.useState(true); // Track loading state
     const [selectedSeason, setSelectedSeason] = React.useState(null); // Track selected season
     const [selectedEpisode, setSelectedEpisode] = React.useState(null); // Track selected episode
-
     const [isFavorite, setIsFavorite] = React.useState(false); // Track if the episode is in favorites
-
     const [playbackProgress, setPlaybackProgress] = React.useState(0); // Track playback progress
+    const [isAudioPlaying, setIsAudioPlaying] = React.useState(false); // Track audio playback state
 
 
     // Fetch favorites from localStorage
@@ -33,6 +32,22 @@ export default function ShowDetail() {
         const completedEpisodes = getCompletedEpisodes();
         return completedEpisodes.includes(episodeKey);
     };
+
+    // Handle beforeunload event
+    React.useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            if (isAudioPlaying) {
+                event.preventDefault();
+                event.returnValue = ""; // Required for Chrome
+            }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [isAudioPlaying]);
 
     // Check if the current episode is in favorites
     React.useEffect(() => {
@@ -146,8 +161,21 @@ export default function ShowDetail() {
         localStorage.setItem(progressKey, progress);
     };
 
+    // Handle audio playback start
+    const handlePlay = () => {
+        setIsAudioPlaying(true);
+    };
+
+    // Handle audio playback pause
+    const handlePause = () => {
+        setIsAudioPlaying(false);
+    };
+
     // Handle audio playback end
     const handleAudioEnd = () => {
+        setIsAudioPlaying(false);
+
+
         // Mark episode as completed
         const completedEpisodes = getCompletedEpisodes();
         const episodeKey = `${params.id}-${selectedSeason.season}-${selectedEpisode.episode}`;
@@ -157,6 +185,17 @@ export default function ShowDetail() {
         }
     };
 
+     // Handle back button click
+     const handleBack = () => {
+        if (isAudioPlaying) {
+            const confirmLeave = window.confirm(
+                "Audio is still playing. Are you sure you want to leave?"
+            );
+            if (!confirmLeave) return;
+        }
+        navigate("/shows");
+    };
+
     if (isLoading) {
         return <div>Loading...</div>; // Show loading state
     }
@@ -164,11 +203,6 @@ export default function ShowDetail() {
     if (!showitem) {
         return <div>No data available</div>; // Handle case where no data is fetched
     }
-
-    // Handle back button click
-    const handleBack = () => {
-        navigate( `/shows`); // Navigate back to the shows page
-    };
 
     return (
         <div>
@@ -224,6 +258,8 @@ export default function ShowDetail() {
                     <audio 
                         controls
                         onTimeUpdate={handleTimeUpdate}
+                        onPlay={handlePlay}
+                        onPause={handlePause}
                         onEnded={handleAudioEnd}
                         src={selectedEpisode.file}
                     >
