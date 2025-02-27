@@ -83,10 +83,13 @@ const Favorites = () => {
           {favorites.length === 0 ? (
               <p>No favorites added yet.</p>
           ) : (
-              <div>
+              <div className="van-list">
                   {sortedFavorites.map((fav, index) => (
-                      <div key={index} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
-                          <h3>{fav.title}</h3>
+                      <div key={index} className="van-tile">
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                                <img src={fav.seasonImage} alt={fav.title} style={{ width: "100px", height: "100px", objectFit: "cover", marginBottom: "10px" }} />
+                                <h3>{fav.title}</h3>
+                            </div>
                           <p>Season: {fav.season}</p>
                           <p>Episode: {fav.episode}</p>
                           <p>Episode Title: {fav.episodeTitle}</p>
