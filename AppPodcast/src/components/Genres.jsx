@@ -32,15 +32,7 @@ const Genres = () => {
                     <button
                         key={genre.id}
                         onClick={() => handleGenreClick(genre.id)}
-                        style={{
-                            padding: "10px 20px",
-                            backgroundColor: "#007bff",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            fontSize: "16px",
-                        }}
+                        style={{ marginBottom: "20px", display: "flex", gap: "10px" }}
                     >
                         {genre.title}
                     </button>
