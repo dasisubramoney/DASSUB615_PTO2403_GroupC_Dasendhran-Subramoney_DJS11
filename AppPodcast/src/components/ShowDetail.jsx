@@ -185,6 +185,13 @@ export default function ShowDetail() {
         }
     };
 
+     // Reset completed episodes
+     const resetCompletedEpisodes = () => {
+        localStorage.removeItem("completedEpisodes");
+        alert("Completed episodes have been reset.");
+        window.location.reload();
+    };
+
      // Handle back button click
      const handleBack = () => {
         if (isAudioPlaying) {
@@ -277,6 +284,11 @@ export default function ShowDetail() {
 
                 </div>
             )}
+
+            {/* Reset Progress Button */}
+            <button onClick={resetCompletedEpisodes} style={{ marginTop: "20px" }}>
+                Reset Completed Episodes
+            </button>
 
         </div>
     )
