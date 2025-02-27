@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAudio } from "./Layout/AudioContext"; // Import the useAudio hook
 
 export default function ShowDetail() {
     const params = useParams();
@@ -12,6 +13,8 @@ export default function ShowDetail() {
     const [isFavorite, setIsFavorite] = React.useState(false); // Track if the episode is in favorites
     const [playbackProgress, setPlaybackProgress] = React.useState(0); // Track playback progress
     const [isAudioPlaying, setIsAudioPlaying] = React.useState(false); // Track audio playback state
+
+    const { audioState, updateAudioState } = useAudio(); // Use the global audio context
 
 
     // Fetch favorites from localStorage
@@ -36,7 +39,7 @@ export default function ShowDetail() {
     // Handle beforeunload event
     React.useEffect(() => {
         const handleBeforeUnload = (event) => {
-            if (isAudioPlaying) {
+            if (audioState.isPlaying) {
                 event.preventDefault();
                 event.returnValue = ""; // Required for Chrome
             }
@@ -47,7 +50,7 @@ export default function ShowDetail() {
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [isAudioPlaying]);
+    }, [audioState.isPlaying]);
 
     // Check if the current episode is in favorites
     React.useEffect(() => {
@@ -124,6 +127,7 @@ export default function ShowDetail() {
             season: selectedSeason.season,
             episode: selectedEpisode.episode,
             episodeTitle: selectedEpisode.title,
+            seasonImage: selectedSeason.image,
             addedAt: new Date().toISOString(), // Add timestamp
         };
 
@@ -218,7 +222,7 @@ export default function ShowDetail() {
                 Back to Shows
             </button>
 
-           <h1>Explore the show {params.id} </h1>  
+           <h1>Explore the show </h1>  
            <div >
                 <h3>{showitem.title || "Title not available"}</h3>
                 <p>{showitem.description || "Description not available"}</p>
@@ -238,6 +242,18 @@ export default function ShowDetail() {
                     ))}
                 </select>
             </div>
+
+            {/* Display Selected Season Title and Image */}
+            {selectedSeason && (
+                <div>
+                    <h2>{selectedSeason.title}</h2>
+                    <img
+                        src={selectedSeason.image}
+                        alt={`Cover for ${selectedSeason.title}`}
+                        style={{ maxWidth: "20%", height: "auto", marginBottom: "20px" }}
+                    />
+                </div>
+            )}
 
             {/* Episode Dropdown (only shown if a season is selected) */}
             {selectedSeason && (
