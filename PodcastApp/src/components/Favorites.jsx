@@ -65,49 +65,82 @@ const Favorites = () => {
 
   return (
         <div>
-          {/* Back Button */}
-          <button onClick={handleBack} style={{ marginBottom: "20px" }}>
-              Back to Shows
-          </button>
-
-          <h1>Your Favorites</h1>
-
-          {/* Sorting Buttons */}
-          <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
-                <button onClick={handleSortByTitleAZ}>Sort by Title (A-Z)</button>
-                <button onClick={handleSortByTitleZA}>Sort by Title (Z-A)</button>
-                <button onClick={handleSortByMostRecentUpdate}>Most Recently Updated</button>
-                <button onClick={handleSortByLeastRecentUpdate}>Least Recently Updated</button>
+        {/* Back Button */}
+        <button onClick={handleBack} style={{ marginBottom: "20px" }}>
+        Back to Shows
+        </button>
+    
+        <h1>Your Favorites</h1>
+    
+        {/* Sorting Buttons */}
+        <div
+        style={{
+            marginBottom: "20px",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "10px",
+        }}
+        >
+        <button onClick={handleSortByTitleAZ}>Sort by Title (A-Z)</button>
+        <button onClick={handleSortByTitleZA}>Sort by Title (Z-A)</button>
+        <button onClick={handleSortByMostRecentUpdate}>Most Recently Updated</button>
+        <button onClick={handleSortByLeastRecentUpdate}>Least Recently Updated</button>
+        </div>
+    
+        {favorites.length === 0 ? (
+        <p>No favorites added yet.</p>
+        ) : (
+        <div
+            className="van-list"
+            style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+            gap: "20px",
+            }}
+        >
+            {sortedFavorites.map((fav, index) => (
+            <div
+                key={index}
+                className="van-tile"
+                style={{
+                border: "1px solid #ccc",
+                padding: "15px",
+                borderRadius: "8px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                }}
+            >
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                <img
+                    src={fav.seasonImage}
+                    alt={fav.title}
+                    style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                    marginBottom: "10px",
+                    }}
+                />
+                <h3>{fav.title}</h3>
+                </div>
+                <p>Season: {fav.season}</p>
+                <p>Episode: {fav.episode}</p>
+                <p>Episode Title: {fav.episodeTitle}</p>
+                <p>Added on: {formatTimestamp(fav.addedAt)}</p>
+    
+                <button
+                onClick={() => removeFromFavorites(fav.id, fav.season, fav.episode)}
+                style={{ marginTop: "10px" }}
+                >
+                Remove from Favorites
+                </button>
             </div>
-
-          {favorites.length === 0 ? (
-              <p>No favorites added yet.</p>
-          ) : (
-              <div className="van-list">
-                  {sortedFavorites.map((fav, index) => (
-                      <div key={index} className="van-tile">
-                        <div style={{ display: "flex", flexDirection: "column" }}>
-                                <img src={fav.seasonImage} alt={fav.title} style={{ width: "100px", height: "100px", objectFit: "cover", marginBottom: "10px" }} />
-                                <h3>{fav.title}</h3>
-                            </div>
-                          <p>Season: {fav.season}</p>
-                          <p>Episode: {fav.episode}</p>
-                          <p>Episode Title: {fav.episodeTitle}</p>
-                          <p>Added on: {formatTimestamp(fav.addedAt)}</p> {/* Display timestamp */}
-
-                          <button
-                              onClick={() =>
-                                  removeFromFavorites(fav.id, fav.season, fav.episode)
-                              }
-                              style={{ marginTop: "10px" }}
-                          >
-                              Remove from Favorites
-                          </button>
-                      </div>
-                  ))}
-              </div>
-          )}
-      </div>
+            ))}
+        </div>
+        )}
+    </div>
   );
 };
 
