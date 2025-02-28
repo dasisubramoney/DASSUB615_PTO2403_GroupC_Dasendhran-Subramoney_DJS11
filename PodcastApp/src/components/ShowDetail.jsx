@@ -50,7 +50,7 @@ export default function ShowDetail() {
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [audioState.isPlaying]);
+    }, [audioState]);
 
     // Check if the current episode is in favorites
     React.useEffect(() => {

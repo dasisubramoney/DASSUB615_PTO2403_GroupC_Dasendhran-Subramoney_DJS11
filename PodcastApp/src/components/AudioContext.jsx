@@ -3,22 +3,20 @@ import { createContext, useContext, useState, useRef } from "react";
 const AudioContext = createContext();
 
 export const AudioProvider = ({ children }) => {
-  const [currentTrack, setCurrentTrack] = useState(null);
+  const [currentEpisode, setCurrentEpisode] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(true);
   const audioRef = useRef(new Audio());
 
-  const playAudio = (trackUrl) => {
-    if (currentTrack !== trackUrl) {
-      audioRef.current.src = trackUrl;
+  const playAudio = (episode) => {
+    if (currentEpisode?.url !== episode.url) {
+      audioRef.current.src = episode.url;
       audioRef.current.play();
-      setCurrentTrack(trackUrl);
+      setCurrentEpisode(episode);
       setIsPlaying(true);
     } else {
       audioRef.current.play();
       setIsPlaying(true);
     }
-    setIsMinimized(false); // Show player when audio starts
   };
 
   const pauseAudio = () => {
@@ -27,10 +25,7 @@ export const AudioProvider = ({ children }) => {
   };
 
   return (
-    <AudioContext.Provider value={{ 
-      playAudio, pauseAudio, isPlaying, currentTrack, 
-      isMinimized, setIsMinimized, audioRef 
-    }}>
+    <AudioContext.Provider value={{ playAudio, pauseAudio, isPlaying, currentEpisode }}>
       {children}
     </AudioContext.Provider>
   );

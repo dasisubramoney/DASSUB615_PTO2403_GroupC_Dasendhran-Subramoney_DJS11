@@ -2,8 +2,8 @@ import './App.css'
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom"
 import './App.css'
-import { AudioProvider } from "./AudioContext";
-import MiniAudioPlayer from "./MiniAudioPlayer";
+import { AudioProvider } from "./components/AudioContext"
+import MiniAudioPlayer from "./components/MiniAudio";
 
 // Import your components for each route
 import Home from './components/Home';
