@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAudio } from "./Layout/AudioContext"; // Import the useAudio hook
+import { useAudio } from "./AudioContext"; // Import the useAudio hook
 
 export default function ShowDetail() {
     const params = useParams();

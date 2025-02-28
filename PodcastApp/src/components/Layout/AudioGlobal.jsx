@@ -1,5 +1,5 @@
 import React from "react";
-import { useAudio } from "./AudioContext"; // Adjust the path as needed
+import { useAudio } from "../AudioContext"; // Adjust the path as needed
 
 export default function GlobalAudioPlayer() {
     const { audioState } = useAudio();
