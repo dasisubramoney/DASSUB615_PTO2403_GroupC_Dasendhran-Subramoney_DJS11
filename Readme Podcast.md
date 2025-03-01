@@ -143,11 +143,11 @@ const addToFavorites = (episode) => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
 };
 
-Deployment:
+# 10-Deployment:
 The app is deployed on Netlify. You can access it here:
-Podcast App Live Demo
+Podcast App Live Demo https://dasendhranspodcasts.netlify.app/  
 
-Contact Information
+# 11-Contact Information
 If you have any questions or need assistance, feel free to reach out to your coaches or contact the project maintainer:
 
 Name: Dasendhran Subramoney
